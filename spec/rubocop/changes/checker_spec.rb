@@ -20,7 +20,7 @@ RSpec.describe Rubocop::Changes::Checker do
 
   before do
     allow(Rubocop::Changes::Shell).to receive(:run)
-      .with("git rev-parse --show-toplevel").and_return(local_git_root_path)
+      .with('git rev-parse --show-toplevel').and_return(local_git_root_path)
   end
 
   context 'when the fork point is not known' do
@@ -39,7 +39,7 @@ RSpec.describe Rubocop::Changes::Checker do
 
       it 'raises an exception' do
         expect(Rubocop::Changes::Shell).to receive(:run).with(
-          'git log -n 1 --pretty=format:"%h" deadbeef'
+          'git log -n 1 --pretty=format:%h deadbeef'
         ).and_return('')
 
         expect do
@@ -85,7 +85,7 @@ RSpec.describe Rubocop::Changes::Checker do
 
       it 'runs a git diff' do
         expect(Rubocop::Changes::Shell).to receive(:run).with(
-          'git log -n 1 --pretty=format:"%h" deadbeef'
+          'git log -n 1 --pretty=format:%h deadbeef'
         ).and_return('deadbeef')
 
         expect(Rubocop::Changes::Shell).to receive(:run).with(
@@ -140,7 +140,7 @@ RSpec.describe Rubocop::Changes::Checker do
     end
   end
 
-  describe "running from a sub-folder" do
+  describe 'running from a sub-folder' do
     let(:diff_files) do
       %w[lib/rubocop/changes/checker.rb spec/rubocop/changes/checker_spec.rb]
     end
@@ -155,7 +155,7 @@ RSpec.describe Rubocop::Changes::Checker do
     end
 
     before do
-      allow(Dir).to receive(:pwd).and_return(File.join(local_git_root_path, "backend"))
+      allow(Dir).to receive(:pwd).and_return(File.join(local_git_root_path, 'backend'))
     end
 
     it 'runs a git diff' do
