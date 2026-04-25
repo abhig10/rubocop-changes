@@ -3,6 +3,8 @@
 require 'git_diff_parser'
 require 'rubocop'
 require 'json'
+require 'ostruct'
+require 'shellwords'
 
 require 'rubocop/changes/check'
 require 'rubocop/changes/shell'
@@ -29,7 +31,7 @@ module Rubocop
 
         print_offenses! unless quiet
 
-        checks.map(&:offenses).flatten
+        checks.flat_map(&:offenses)
       end
 
       private
@@ -38,11 +40,12 @@ module Rubocop
 
       def path_prefix
         return @path_prefix if defined?(@path_prefix)
-        @path_prefix = local_git_root_path && Dir.pwd.gsub(local_git_root_path, '')[1..-1]
+
+        @path_prefix = local_git_root_path && Dir.pwd.gsub(local_git_root_path, '')[1..]
       end
 
       def local_git_root_path
-        @local_git_root_path ||= Shell.run("git rev-parse --show-toplevel")
+        @local_git_root_path ||= Shell.run('git rev-parse --show-toplevel')
       end
 
       def fork_point
@@ -50,13 +53,13 @@ module Rubocop
       end
 
       def command
-        return "git merge-base HEAD origin/#{base_branch}" unless commit
+        return "git merge-base HEAD origin/#{Shellwords.shellescape(base_branch)}" unless commit
 
-        "git log -n 1 --pretty=format:\"%h\" #{commit}"
+        "git log -n 1 --pretty=format:%h #{Shellwords.shellescape(commit)}"
       end
 
       def diff
-        Shell.run("git diff #{fork_point}")
+        Shell.run("git diff #{Shellwords.shellescape(fork_point)}")
       end
 
       def patches
@@ -80,7 +83,7 @@ module Rubocop
       def rubocop
         shell_command = [
           'rubocop',
-          exclussion_modifier,
+          exclusion_modifier,
           formatter_modifier,
           auto_correct_modifier
         ].compact.join(' ')
@@ -88,12 +91,13 @@ module Rubocop
         Shell.run(shell_command)
       end
 
-      def exclussion_modifier
+      def exclusion_modifier
         '--force-exclusion'
       end
 
       def formatter_modifier
-        "-f j #{ruby_changed_files_from_pwd.join(' ')}"
+        files = ruby_changed_files_from_pwd.map { |path| Shellwords.shellescape(path) }.join(' ')
+        "-f j #{files}"
       end
 
       def auto_correct_modifier
@@ -105,7 +109,13 @@ module Rubocop
       end
 
       def checks
-        @checks ||= ruby_changed_files.map do |file|
+        return [] if ruby_changed_files.empty?
+
+        @checks ||= build_checks
+      end
+
+      def build_checks
+        ruby_changed_files.map do |file|
           analysis = rubocop_json.files.find { |item| item.path == from_pwd_path(file) }
           patch = patches.find { |item| item.file == file }
 
@@ -120,7 +130,7 @@ module Rubocop
       end
 
       def total_offenses
-        checks.map { |check| check.offended_lines.size }.inject(0, :+)
+        checks.sum { |check| check.offended_lines.size }
       end
 
       def print_offenses!
@@ -140,7 +150,7 @@ module Rubocop
       def formatter_klass
         return formatters[format] unless formatters[format].is_a? String
 
-        Kernel.const_get("RuboCop::Formatter::#{formatters[format]}")
+        RuboCop::Formatter.const_get(formatters[format], false)
       end
 
       def formatters
@@ -168,7 +178,7 @@ module Rubocop
 
       def from_pwd_path(path)
         if path_prefix
-          path.gsub(/^#{path_prefix}\//, '')
+          path.gsub(%r{^#{path_prefix}/}, '')
         else
           path
         end
