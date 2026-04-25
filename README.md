@@ -1,7 +1,7 @@
 # Rubocop::Changes
 
 [![Gem Version](https://img.shields.io/gem/v/rubocop-changes)](https://rubygems.org/gems/rubocop-changes)
-[![Build Status](https://github.com/fcsonline/rubocop-changes/actions/workflows/ci.yml/badge.svg)](https://github.com/fcsonline/rubocop-changes/actions/workflows/ci.yml)
+[![Build Status](https://github.com/abhig10/rubocop-changes/actions/workflows/ci.yml/badge.svg)](https://github.com/abhig10/rubocop-changes/actions/workflows/ci.yml)
 
 `rubocop-changes` runs rubocop and shows only the offenses you introduced since
 the fork point of your git branch. Will not complain about existing offenses in
@@ -65,7 +65,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/fcsonline/rubocop-changes. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/abhig10/rubocop-changes. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -73,4 +73,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Rubocop::Changes project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fcsonline/rubocop-changes/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Rubocop::Changes project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/abhig10/rubocop-changes/blob/master/CODE_OF_CONDUCT.md).
