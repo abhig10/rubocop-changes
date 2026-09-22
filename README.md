@@ -12,7 +12,7 @@ for you daily work, to know new offenses created by you.
 
 Internally `rubocop-changes` runs `rubocop` and a `git diff` and does the
 intersection of line numbers to know the new offenses you are introducing to
-you master branch.
+your main branch.
 
 ## Installation
 

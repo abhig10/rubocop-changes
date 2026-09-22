@@ -1,6 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.3
   NewCops: disable
+  SuggestExtensions: false
 
 Lint/RaiseException:
   Enabled: false
@@ -25,3 +26,14 @@ Style/FrozenStringLiteralComment:
 
 Layout/LineLength:
   Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - '*.gemspec'
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/MethodLength:
+  Max: 15
